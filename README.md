@@ -24,10 +24,10 @@ Dash application takes data from Cassandra and visualizes it. It plots current F
 
 ### Repo Directory Structure
 
-HTTP contains a client getting data from FX provider.
+`HTTP` contains a client getting data from FX provider.
 
-Kafka contains a script to create topics.
+`Kafka` contains a script to create topics.
 
-Cassandra contains all scripts which insert data into the database. 
+`Cassandra` contains all scripts which insert data into the database. 
 
-Spark contains scripts computing trends and detecting data manipulation in the stream.
+`Spark` contains scripts computing trends and detecting data manipulation in the stream.
