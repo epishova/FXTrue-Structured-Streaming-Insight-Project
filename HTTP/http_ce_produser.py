@@ -4,11 +4,15 @@ from kafka import KafkaProducer
 from kafka.errors import KafkaError
 import json
 
+# Specify your credentials to connect to TrueFX:
+YOURUSERNAME = 
+YOURPASSWORD = 
+
 topic = 'currency_exchange'
 broker = 'ec2-18-209-75-68.compute-1.amazonaws.com:9092, ec2-18-205-142-57.compute-1.amazonaws.com:9092, ec2-50-17-32-144.compute-1.amazonaws.com:9092'
 #broker = 'localhost:9092'
 
-r = requests.get("http://webrates.truefx.com/rates/connect.html?u=annaepishova&p=ILoveRus&q=ozrates&f=csv")
+r = requests.get("http://webrates.truefx.com/rates/connect.html?u="+YOURUSERNAME+"&p="+YOURPASSWORD"&q=ozrates&f=csv")
 #print(r.status_code)
 if r.status_code == requests.codes.ok:
     print('HTTP request is OK')
