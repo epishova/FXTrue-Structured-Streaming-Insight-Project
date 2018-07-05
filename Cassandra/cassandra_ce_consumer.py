@@ -4,17 +4,34 @@ from kafka import KafkaConsumer
 import cassandra
 from cassandra.cluster import Cluster
 
+# Define brokers for Kafca and cluster parameters for Cassandra:
 broker = ['ec2-18-209-75-68.compute-1.amazonaws.com:9092', 'ec2-18-205-142-57.compute-1.amazonaws.com:9092', 'ec2-50-17-32-144.compute-1.amazonaws.com:9092']
+cassandra_host_names = ['ec2-52-23-103-178.compute-1.amazonaws.com', 'ec2-52-2-16-225.compute-1.amazonaws.com', 'ec2-34-192-194-39.compute-1.amazonaws.com']
 topic = 'currency_exchange'
 keyspace = 'fx'
 
 consumer = KafkaConsumer(topic, bootstrap_servers = broker)
 print('Consumer created')
 
-cluster = Cluster()
+cluster = Cluster(cassandra_host_names)
 session = cluster.connect(keyspace)
 print('Connected to Cassandra')
+insert_prep = session.prepare("""
+    insert into fx_rates (
+    record_id,
+    fx_marker,
+    timestamp_ms,
+    timestamp_d,
+    bid_big,
+    bid_points,
+    offer_big,
+    offer_points,
+    hight,
+    low,
+    open)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""")
 
+# While there are some msgs in Kafca insert them to Cassandra:
 for msg in consumer:
     try:
         jsons = msg.value.decode()
@@ -32,30 +49,10 @@ for msg in consumer:
             values.append(float(parsed["low"]))
             values.append(float(parsed["open"]))
             values.insert(0, cassandra.util.uuid_from_time(values[1] / 1000.0))
-            #print("here values {}".format(values))
-            session.execute(
-                """
-                insert into fx_rates (
-                record_id,
-                fx_marker,
-                timestamp_ms,
-                timestamp_d,
-                bid_big,
-                bid_points,
-                offer_big,
-                offer_points,
-                hight,
-                low,
-                open)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                """,
-                values
-            )
+            session.execute(insert_prep, values)
             print('Message inserted into Cassandra')
     except :
         #log.exception()
         print('Insert into Cassandra FAILED!')
+        # Keep inserting new data as it comming from the stream
         pass
-    
-# for msg in consumer:
-#     print(msg)
