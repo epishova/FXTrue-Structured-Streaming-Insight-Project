@@ -50,6 +50,8 @@ while True:
 
         # It is more efficient to send one big msg then many small msgs:
         jsons = jsons.strip()
+        if jsons == "":
+            continue
         future = producer.send(topic, str.encode(jsons))
         try:
             record_metadata = future.get(timeout = 60) #ms
