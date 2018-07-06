@@ -21,7 +21,7 @@ def establish_connection():
 session_expired_limit = 500
 session_expired = 0
 
-# Define settings to connect to Kafka:
+# Define settings to connect to Kafka
 topic = 'currency_exchange'
 broker = 'ec2-18-209-75-68.compute-1.amazonaws.com:9092, ec2-18-205-142-57.compute-1.amazonaws.com:9092, ec2-50-17-32-144.compute-1.amazonaws.com:9092'
 producer = KafkaProducer(bootstrap_servers = broker)
