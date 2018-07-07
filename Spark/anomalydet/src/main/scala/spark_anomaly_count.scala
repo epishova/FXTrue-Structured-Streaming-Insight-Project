@@ -63,7 +63,7 @@ object SimpleCount {
     .withColumn("timestamp_dt", to_timestamp(from_unixtime($"timestamp_ms"/1000.0, "yyyy-MM-dd HH:mm:ss.SSS")))
     .drop("_tmp").filter("fx_marker != ''")
 
-  // Calculate how many mesages are comming from the data source
+  // Calculate how many messages are comming from the data source
   val countAD = parsed
     .filter($"fx_marker" isin ("USD/JPY"))
     .select($"fx_marker", $"timestamp_dt", $"bid_points")
@@ -72,7 +72,8 @@ object SimpleCount {
       window($"timestamp_dt", "10 seconds"),
       $"fx_marker"
     ).count()
-
+  
+  // Count as anomaly a time whndow when number of received messages fall out of the statistical boundaries 
   val filterCountAD = countAD
     .filter($"count" < 15 || $"count" > 70)
 
@@ -83,7 +84,7 @@ object SimpleCount {
     .option("kafka.bootstrap.servers", broker)
     .option("topic", "ad_simple_count")
     .option("checkpointLocation", sys.env("HOME") + "/kafka_sink_chkp/sink_filterCountADSimpleCount")
-    .outputMode("complete")
+    .outputMode("update")
     .start()
 
     sinkKafkaADSimpleCount.awaitTermination()
