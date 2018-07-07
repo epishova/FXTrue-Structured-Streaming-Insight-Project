@@ -16,7 +16,7 @@ object MovingAvg {
 
     val spark = SparkSession
       .builder
-      .appName("AnomalyDetectionBySimpleCount")
+      .appName("MovingAverage")
       .getOrCreate()
 
     import spark.implicits._
@@ -80,7 +80,7 @@ object MovingAvg {
     .option("kafka.bootstrap.servers", broker)
     .option("topic", "fx_avg")
     .option("checkpointLocation", sys.env("HOME") + "/kafka_sink_chkp/sink_windAvg")
-    .outputMode("complete")
+    .outputMode("update")
     .start()
 
     sinkKafkaAvg.awaitTermination()
