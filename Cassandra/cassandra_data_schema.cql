@@ -42,3 +42,12 @@ fx_marker text,
 anomaly_count double,
 primary key ((fx_marker, timestamp_d), window_start)
 ) WITH CLUSTERING ORDER BY (window_start DESC);
+
+// Table which stores statistics about FX stream computed on historical data
+CREATE TABLE anomaly_count_statistics (
+fx_marker text,
+stat_gathered_date timestamp,
+avg_10sec double,
+sbddev_10sec double,
+primary key (fx_marker, stat_gathered_date)
+) WITH CLUSTERING ORDER BY (stat_gathered_date DESC);
