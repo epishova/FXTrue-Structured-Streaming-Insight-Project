@@ -32,4 +32,4 @@ Dash application takes data from Cassandra and visualizes it. It plots current F
 
 `Cassandra` contains all scripts which insert data into the database. 
 
-`Spark` contains scripts computing trends and detecting data manipulation in the stream.
+`Spark` contains scripts computing trends and detecting data manipulation in the stream. Folder `anomalydet` contains script detecting anomalies in the data stream. `gatherstat` contains batch job computing statistics on historical FX rates. Once a day that statistics are passed passed to the streaming job. `datatrend` computes running average of FX rates.
