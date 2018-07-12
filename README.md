@@ -4,7 +4,7 @@ Real-time analysis and manipulation detection for currency exchange
 
 ### Introduction
 
-![Web app screenshot](https://github.com/epishova/FXTrue-Insight-Project/blob/master/dash_app_screenshot.png "Screenshot")
+![Web app screenshot](https://github.com/epishova/FXTrue-Insight-Project/blob/master/app_screenshot.png "Screenshot")
 
 This project was developed as part of the Insight Data Engineering Fellow Program. Slides for the project presentation can be found [here](https://tinyurl.com/fxtrue-slides). Additionally, here is the link to the [project website](https://tinyurl.com/fxtrue).  
 
