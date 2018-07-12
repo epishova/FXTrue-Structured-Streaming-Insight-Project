@@ -41,7 +41,9 @@ object SimpleCount {
         StructField("offer_points", StringType, false),
         StructField("hight", StringType, false),
         StructField("low", StringType, false),
-        StructField("open", StringType, false)
+        StructField("open", StringType, false),
+        StructField("stream_stat_min", StringType, false),
+        StructField("stream_stat_max", StringType, false)
       )
     )
 
@@ -61,21 +63,23 @@ object SimpleCount {
     .withColumn("low", $"low".cast(DoubleType))
     .withColumn("open", $"open".cast(DoubleType))
     .withColumn("timestamp_dt", to_timestamp(from_unixtime($"timestamp_ms"/1000.0, "yyyy-MM-dd HH:mm:ss.SSS")))
+    .withColumn("stream_stat_min", $"stream_stat_min".cast(DoubleType))
+    .withColumn("stream_stat_max", $"stream_stat_max".cast(DoubleType))
     .drop("_tmp").filter("fx_marker != ''")
 
-  // Calculate how many messages are comming from the data source
+  // Calculate how many mesages are comming from the data source
   val countAD = parsed
     .filter($"fx_marker" isin ("USD/JPY"))
-    .select($"fx_marker", $"timestamp_dt", $"bid_points")
+    .select($"fx_marker", $"timestamp_dt", $"bid_points", $"stream_stat_min", $"stream_stat_max")
     .withWatermark("timestamp_dt", "1 minute")
     .groupBy(
       window($"timestamp_dt", "10 seconds"),
-      $"fx_marker"
+      $"fx_marker", $"stream_stat_min", $"stream_stat_max"
     ).count()
-  
-  // Count as anomaly a time whndow when number of received messages fall out of the statistical boundaries 
+
   val filterCountAD = countAD
-    .filter($"count" < 15 || $"count" > 70)
+    .filter($"count" < $"stream_stat_min" || $"count" > $"stream_stat_max")
+    .drop("stream_stat_min", "stream_stat_max")
 
   val sinkKafkaADSimpleCount = filterCountAD
     .selectExpr("CAST(fx_marker AS STRING) AS key", "to_json(struct(*)) AS value")
