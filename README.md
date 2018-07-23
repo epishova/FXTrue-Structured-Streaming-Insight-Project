@@ -1,14 +1,14 @@
 # FXTrue - Insight Project
 
-Real-time analysis and manipulation detection for currency exchange
+Real-time analysis and manipulation detection for currency exchange. The source code may be useful for those who are looking for an example of how to work with Spark Structured Streaming API and Kafka.
 
 ### Introduction
 
 ![Web app screenshot](https://github.com/epishova/FXTrue-Insight-Project/blob/master/app_screenshot.png "Screenshot")
 
-This project was developed as part of the Insight Data Engineering Fellow Program. Slides for the project presentation can be found [here](https://tinyurl.com/fxtrue-slides). Additionally, here is the link to the [project website](https://tinyurl.com/fxtrue).  
+This project was developed as part of the Insight Data Engineering Fellow Progrtured Streaming API.am. Slides for the project presentation can be found [here](https://tinyurl.com/fxtrue-slides). Additionally, here is a link to the [project video](https://tinyurl.com/fxtrue-demo).  
 
-The goal was to build a distributed, streaming pipeline for real-time analysis and manipulation detection for currency exchange.
+The goal was to build a distributed, streaming pipeline for real-time analysis and manipulation detection for currency exchange. Additionally, I aimed to explore Spark Structured Streaming API.
 
 First, I ingest real-time streaming data from FX provider. Then, I use Spark Structured Streaming to analyze and monitor incoming data to identify current FX trends and detect anomalies in the stream (Kafka, Spark, Cassandra, Python, Scala). To detect an anomaly I gather statistics (mean and std. deviation) on historical FX data. Those statistics are used in the streaming job to mark as an anomaly any time window during which the stream fell out statistical boundaries. Finally, I create analytical dashboards to display reactive real-time metrics (Dash)
 
